@@ -14,11 +14,14 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { authClient } from '@/lib/auth-client';
 import { loginSchema } from '@/schemas/auth';
 import { useForm } from '@tanstack/react-form';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { toast } from 'sonner';
 
 export function LoginForm() {
+  const navigate = useNavigate();
   const form = useForm({
     defaultValues: {
       email: '',
@@ -27,8 +30,22 @@ export function LoginForm() {
     validators: {
       onSubmit: loginSchema,
     },
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async ({ value }) => {
+      // console.log(values);
+      await authClient.signIn.email({
+        email: value.email,
+        password: value.password,
+        // callbackURL: '/dashboard',
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success('Logged in successfully.');
+            navigate({ to: '/' });
+          },
+          onError: ({ error }) => {
+            toast.error(`Something went wrong. ${error.message}`);
+          },
+        },
+      });
     },
   });
 

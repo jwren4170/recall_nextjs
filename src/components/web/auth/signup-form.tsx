@@ -14,11 +14,14 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { authClient } from '@/lib/auth-client';
 import { signupSchema } from '@/schemas/auth';
 import { useForm } from '@tanstack/react-form';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { toast } from 'sonner';
 
 export function SignupForm() {
+  const navigate = useNavigate();
   const form = useForm({
     defaultValues: {
       fullName: '',
@@ -28,8 +31,23 @@ export function SignupForm() {
     validators: {
       onSubmit: signupSchema,
     },
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async ({ value }) => {
+      // console.log(values);
+      await authClient.signUp.email({
+        email: value.email,
+        password: value.password,
+        name: value.fullName,
+        // callbackURL: '/login',
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success('Account created successfully.');
+            navigate({ to: '/login' });
+          },
+          onError: () => {
+            toast.error('Something went wrong.');
+          },
+        },
+      });
     },
   });
   return (
@@ -115,6 +133,7 @@ export function SignupForm() {
                       aria-invalid={isInvalid}
                       placeholder='********'
                       autoComplete='off'
+                      type={field.name}
                     />
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
