@@ -43,8 +43,8 @@ export function SignupForm() {
             toast.success('Account created successfully.');
             navigate({ to: '/login' });
           },
-          onError: () => {
-            toast.error('Something went wrong.');
+          onError: ({ error }) => {
+            toast.error(error.message);
           },
         },
       });
@@ -107,7 +107,7 @@ export function SignupForm() {
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                       placeholder='john.doe@example.com'
-                      autoComplete='off'
+                      autoComplete='on'
                     />
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
@@ -132,8 +132,8 @@ export function SignupForm() {
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                       placeholder='********'
-                      autoComplete='off'
                       type={field.name}
+                      autoComplete='off'
                     />
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />

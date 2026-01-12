@@ -17,31 +17,11 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { authClient } from '@/lib/auth-client';
-import { useNavigate } from '@tanstack/react-router';
-import { toast } from 'sonner';
-
-import { NavUserProps } from '@/lib/types';
+import { useSignOut } from '@/lib/utils';
 
 export function NavUser({ user }: NavUserProps) {
   const { isMobile } = useSidebar();
-  const navigate = useNavigate();
-
-  const handleSignOut = async () => {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          navigate({
-            to: '/',
-          });
-          toast.success('Signed out successfully');
-        },
-        onError: ({ error }) => {
-          toast.error(error.message);
-        },
-      },
-    });
-  };
+  const handleSignOut = useSignOut();
 
   return (
     <SidebarMenu>

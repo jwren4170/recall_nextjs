@@ -1,24 +1,13 @@
 import { Button, buttonVariants } from '@/components/ui/button';
 import { authClient } from '@/lib/auth-client';
+import { useSignOut } from '@/lib/utils';
 import { Link } from '@tanstack/react-router';
-import { toast } from 'sonner';
 import { ThemeToggle } from './theme-toggle';
 
 const Navbar = () => {
   const { data: session, isPending } = authClient.useSession();
+  const handleSignOut = useSignOut();
 
-  const handleSignOut = async () => {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          toast.success('Signed out successfully');
-        },
-        onError: ({ error }) => {
-          toast.error(error.message);
-        },
-      },
-    });
-  };
   return (
     <nav className='top-0 z-50 sticky bg-background/95 supports-backdrop-filter:bg-background/60 backdrop-blur border-b'>
       <div className='flex justify-between items-center mx-auto px-4 max-w-6xl h-16'>

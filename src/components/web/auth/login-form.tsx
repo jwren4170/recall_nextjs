@@ -42,7 +42,7 @@ export function LoginForm() {
             navigate({ to: '/' });
           },
           onError: ({ error }) => {
-            toast.error(`Something went wrong. ${error.message}`);
+            toast.error(error.message);
           },
         },
       });
@@ -81,7 +81,7 @@ export function LoginForm() {
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                       placeholder='john.doe@example.com'
-                      autoComplete='off'
+                      autoComplete='on'
                     />
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
@@ -106,6 +106,7 @@ export function LoginForm() {
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                       placeholder='********'
+                      type={field.name}
                       autoComplete='off'
                     />
                     {isInvalid && (
